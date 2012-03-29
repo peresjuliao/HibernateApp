@@ -1,4 +1,4 @@
-package br.com.hibernate.dao.base;
+package br.com.hibernate.dao;
 
 import java.io.Serializable;
 import java.util.List;
