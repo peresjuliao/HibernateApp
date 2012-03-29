@@ -12,11 +12,9 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements
 
 	private Session session;
 	private Transaction transaction;
-	private Class<T> persistentClass;
+	protected abstract Class<T> getEntityClass();
 
-	public GenericDaoImpl(Class<T> persistentClass) {
-		this.persistentClass = persistentClass;
-	}
+	
 
 	@Override
 	public void save(T object) {
@@ -42,17 +40,21 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements
 		transaction.commit();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public T findById(Serializable id) {
+		T entity;
 		session = HibernateUtil.getSessionFactory().openSession();
-		return (T) session.load(persistentClass, id);
+		entity = (T) session.load(getEntityClass(), id);
+		return entity;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> findAll() {
 		List<T> resultList = null;
 		session = HibernateUtil.getSessionFactory().openSession();
-		resultList = session.createCriteria(persistentClass).list();
+		resultList = session.createCriteria(getEntityClass()).list();
 		return resultList;
 	}
 
