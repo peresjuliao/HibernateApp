@@ -12,29 +12,29 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements
 
 	private Session session;
 	private Transaction transaction;
-	protected abstract Class<T> getEntityClass();
-
+	private Class<T> persistentClass; 
 	
+	public GenericDaoImpl(Class<T> persistentClass) {
+		this.session = HibernateUtil.getSessionFactory().openSession();
+		this.persistentClass = persistentClass;		
+	}	
 
 	@Override
-	public void save(T object) {
-		session = HibernateUtil.getSessionFactory().openSession();
+	public void save(T object) {		
 		transaction = session.beginTransaction();
 		session.save(object);
 		transaction.commit();
 	}
 
 	@Override
-	public void update(T object) {
-		session = HibernateUtil.getSessionFactory().openSession();
+	public void update(T object) {		
 		transaction = session.beginTransaction();
 		session.update(object);
 		transaction.commit();
 	}
 
 	@Override
-	public void delete(T object) {
-		session = HibernateUtil.getSessionFactory().openSession();
+	public void delete(T object) {		
 		transaction = session.beginTransaction();
 		session.delete(object);
 		transaction.commit();
@@ -43,18 +43,14 @@ public abstract class GenericDaoImpl<T, ID extends Serializable> implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public T findById(Serializable id) {
-		T entity;
-		session = HibernateUtil.getSessionFactory().openSession();
-		entity = (T) session.load(getEntityClass(), id);
-		return entity;
+		return (T) session.load(persistentClass, id);		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> findAll() {
 		List<T> resultList = null;
-		session = HibernateUtil.getSessionFactory().openSession();
-		resultList = session.createCriteria(getEntityClass()).list();
+		resultList = session.createCriteria(persistentClass).list();
 		return resultList;
 	}
 
