@@ -1,5 +1,10 @@
 package br.com.hibernate.main;
 
+import java.util.List;
+
+
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -37,13 +42,21 @@ public class Main {
 		
 		// The code
 		
+		Query query = session.createQuery("from Usuario");
+		List<Usuario> usuarios = query.list();
+		
+		for (Usuario usuario : usuarios) {
+			System.out.println(usuario.getNome());
+		}
+		
+		
 		// Buscando o usuario
 //		Usuario usuario = (Usuario) session.get(Usuario.class, 2);
 		
-		Produto produto = (Produto) session.get(Produto.class, 1);
-		
-		System.out.println("O produto e do " + produto.getDono().getNome());
-		
+//		Produto produto = (Produto) session.get(Produto.class, 1);
+//		
+//		System.out.println("O produto e do " + produto.getDono().getNome());
+//		
 		// Criando o usuario
 	//	Usuario usuario1 = new Usuario();
 		
